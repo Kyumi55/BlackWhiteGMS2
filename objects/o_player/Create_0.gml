@@ -10,6 +10,10 @@ canDash = false;
 dashDistance = 150;
 dashTime = 8;
 
+jumpBuffer = 0;
+jumpBufferTime = 15;// change this to the number of frames you want the buffer to last
+isOnGround = false;
+nearGroundDistance = 10; // Change this to the number of pixels above the ground you want the buffer to start
 
 StateFree = function()
 {
@@ -19,14 +23,19 @@ StateFree = function()
 
 	vspd = vspd + baseGrav;
 	
-	if(canDash) && (key_dash)
-	{
+	nearGround = place_meeting(x, y + nearGroundDistance, o_wall);
+
+	
+	// Check for dash
+    if(canDash && !place_meeting(x, y+1, o_wall) && key_dash)
+    {
 		canDash = false;
 		canjump = 0;
 		dashDirection = point_direction(0,0,key_right-key_left,key_down-key_up);
 		dashSp = dashDistance/dashTime;
 		dashEnergy = dashDistance;
 		state = StateDash;
+
 	}
 
 	//horizonal colision
@@ -48,6 +57,7 @@ StateFree = function()
 		{
 			canjump = 5;
 			canDash = true;
+			isOnGround = true;
 		}
 		while(abs((vspd) > 0.1))
 		{
@@ -59,14 +69,29 @@ StateFree = function()
 	y = y + vspd; 
 
 	//jump
-	if(canjump-- > 0) && (key_jump)
+	if((canjump-- > 0 || (jumpBuffer > 0 && nearGround)) && key_jump)
 	{
-		vspd = vspdJump;
-		canjump= 0;
+	    vspd = vspdJump;
+	    canjump= 0;
+	    jumpBuffer = 0;
 	}
+
 	
+	// update jump buffer
+	if(key_jump && nearGround && jumpBuffer <= 0) jumpBuffer = jumpBufferTime;
+	if(jumpBuffer > 0) jumpBuffer--;
+	show_debug_message(jumpBuffer);
 	
-	
+	// vertical collision
+	if (place_meeting(x,y+vspd,o_wall))
+	{
+	    if(vspd > 0 ) 
+	    {
+	        canjump = 5;
+	        canDash = false;
+	        jumpBuffer = 0; // reset buffer when landing
+	    }
+	}
 }
 
 StateDash = function()
