@@ -7,7 +7,7 @@ walkSpd = 4;
 canjump = 0; //bool
 vspdJump = -8;
 canDash = false;
-dashDistance = 96;
+dashDistance = 150;
 dashTime = 8;
 
 
@@ -18,6 +18,16 @@ StateFree = function()
 	hspd = move * walkSpd;
 
 	vspd = vspd + baseGrav;
+	
+	if(canDash) && (key_dash)
+	{
+		canDash = false;
+		canjump = 0;
+		dashDirection = point_direction(0,0,key_right-key_left,key_down-key_up);
+		dashSp = dashDistance/dashTime;
+		dashEnergy = dashDistance;
+		state = StateDash;
+	}
 
 	//horizonal colision
 	if (place_meeting(x+hspd,y,o_wall))
@@ -55,15 +65,7 @@ StateFree = function()
 		canjump= 0;
 	}
 	
-	if(canDash) && (key_dash)
-	{
-		canDash = false;
-		canjump = 0;
-		dashDirection = point_direction(0,0,key_right-key_left,key_down-key_up);
-		dashSp = dashDistance/dashTime;
-		dashEnergy = dashDistance;
-		state = StateDash;
-	}
+	
 	
 }
 
@@ -83,27 +85,24 @@ StateDash = function()
 	
 	
 	//horizonal colision
-	if (place_meeting(x+hspd,y,o_wall))
+	if (place_meeting(x+hspd,y,o_wall)) 
 	{
-		while(abs((hspd) > 0.1))
+	    var signH = (hspd > 0) - (hspd < 0);  // get the direction of movement
+	    while(!place_meeting(x + signH, y, o_wall)) 
 		{
-			hspd*= 0.5;
-			if(!place_meeting(x + hspd,y,o_wall)) x +=hspd;
+	        x += signH;
 		}
 		hspd = 0;
 	}
 	x = x + hspd; 
 
 	//vertical collision
-	if (place_meeting(x,y+vspd,o_wall))
-	{
-		while(abs((vspd) > 0.1))
-		{
-			vspd*= 0.5;
-			if(!place_meeting(x,y + vspd,o_wall)) y +=vspd;
-		}
-		vspd = 0;
-	}
+	if (place_meeting(x, y + vspd, o_wall)) {
+    while(!place_meeting(x, y + sign(vspd), o_wall)) {
+        y += sign(vspd);
+    }
+    vspd = 0;
+}
 	y = y + vspd; 
 	
 	//Ending dash
