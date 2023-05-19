@@ -19,8 +19,8 @@ StateFree = function()
 
 	vspd = vspd + baseGrav;
 	
-	if(canDash) && (key_dash)
-	{
+	if(canDash && !place_meeting(x, y+1, o_wall) && key_dash)
+    {
 		canDash = false;
 		canjump = 0;
 		dashDirection = point_direction(0,0,key_right-key_left,key_down-key_up);
