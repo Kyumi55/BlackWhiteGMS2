@@ -5,7 +5,7 @@ vspd = 0;
 baseGrav = 0.3;
 walkSpd = 4;
 canjump = 0; //bool
-vspdJump = -8;
+vspdJump = -10;
 canDash = false;
 dashDistance = 150;
 dashTime = 8;
@@ -63,6 +63,7 @@ StateFree = function()
 	{
 		vspd = vspdJump;
 		canjump= 0;
+		canDash = true;
 	}
 	
 	
@@ -102,6 +103,8 @@ StateDash = function()
         y += sign(vspd);
     }
     vspd = 0;
+	canjump = 5
+	canDash = true;
 }
 	y = y + vspd; 
 	
