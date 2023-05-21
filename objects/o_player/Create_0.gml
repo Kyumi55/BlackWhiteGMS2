@@ -66,56 +66,75 @@ StateFree = function()
 		canDash = true;
 	}
 	
-	
-	
+	if((vspd < 0) && (!key_jump_held)) vspd += (baseGrav*2);
 }
 
 StateDash = function()
 {
-	//move via the dash
-	hspd = lengthdir_x(dashSp,dashDirection);
-	vspd = lengthdir_y(dashSp,dashDirection);
-	
-	//Trail Effect
-	with(instance_create_depth(x,y,depth+1,o_trail))
-	{
-		sprite_index = other.sprite_index;
-		image_blend = c_ltgray; //select the color
-		image_alpha = 0.7;
-	}
-	
-	
-	//horizonal colision
-	if (place_meeting(x+hspd,y,o_wall)) 
-	{
-	    var signH = (hspd > 0) - (hspd < 0);  // get the direction of movement
-	    while(!place_meeting(x + signH, y, o_wall)) 
-		{
-	        x += signH;
-		}
-		hspd = 0;
-	}
-	x = x + hspd; 
-
-	//vertical collision
-	if (place_meeting(x, y + vspd, o_wall)) {
-    while(!place_meeting(x, y + sign(vspd), o_wall)) {
-        y += sign(vspd);
+    //move via the dash
+    hspd = lengthdir_x(dashSp,dashDirection);
+    vspd = lengthdir_y(dashSp,dashDirection);
+    
+    //Trail Effect
+    with(instance_create_depth(x,y,depth+1,o_trail))
+    {
+        sprite_index = other.sprite_index;
+        image_blend = c_ltgray; //select the color
+        image_alpha = 0.7;
     }
-    vspd = 0;
-	canjump = 5
-	canDash = true;
+    
+    //horizontal collision
+    if (place_meeting(x+hspd,y,o_wall)) 
+    {
+        var signH = (hspd > 0) - (hspd < 0);  // get the direction of movement
+        while(!place_meeting(x + signH, y, o_wall)) 
+        {
+            x += signH;
+        }
+        hspd = 0;
+    }
+    x = x + hspd; 
+
+    //vertical collision
+    if (place_meeting(x, y + vspd, o_wall)) 
+    {
+        var signV = (vspd > 0) - (vspd < 0); // get the direction of movement
+        if(vspd < 0) //check if the character is dashing upwards into the ceiling
+        {
+            while(!place_meeting(x, y + signV, o_wall)) 
+            {
+                y += signV;
+            }
+            vspd = 0;
+            canjump = 5;
+            canDash = false;  // the player can't dash until they touch the ground again.
+            state = StateFree; // change state to StateFree
+        }
+        else // check if the character is dashing downwards into the floor
+        {
+            while(!place_meeting(x, y + signV, o_wall)) 
+            {
+                y += signV;
+            }
+            vspd = 0;
+            canjump = 5;
+            canDash = true; // The player can dash again as they are on the floor
+        }
+    }
+    else
+    {
+        y = y + vspd; 
+    }
+    
+    //Ending dash
+    dashEnergy -= dashSp;
+    if(dashEnergy <= 0)
+    {
+        vspd = 0;
+        hspd = 0;
+        state = StateFree;
+    }
 }
-	y = y + vspd; 
-	
-	//Ending dash
-	dashEnergy -= dashSp;
-	if(dashEnergy <= 0)
-	{
-		vspd = 0;
-		hspd = 0;
-		state = StateFree;
-	}
-}
+
 
 state = StateFree;
