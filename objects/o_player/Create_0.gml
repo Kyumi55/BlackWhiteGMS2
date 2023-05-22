@@ -3,7 +3,7 @@
 hspd = 0;
 vspd = 0;
 baseGrav = 0.3;
-walkSpd = 4;
+//walkSpd = 4;
 canjump = 0; //bool
 vspdJump = -10;
 canDash = false;
@@ -13,15 +13,34 @@ dashTime = 8;
 
 StateFree = function()
 {
-	var move = key_right-key_left;
-
-	hspd = move * walkSpd;
-	
-	var speedModifier = 1;
-
-    if (!key_dash) // Only adjust horizontal speed if not dashing
+	var move = key_right - key_left;
+    
+    var maxWalkSpd = 6; // Maximum walking speed
+    var acceleration = 0.3; // Acceleration rate
+    
+    // Apply acceleration to horizontal speed
+    if (move != 0)
     {
-        hspd = move * walkSpd * speedModifier;
+        hspd += move * acceleration;
+        
+        // Limit the horizontal speed to the maximum walking speed
+        hspd = clamp(hspd, -maxWalkSpd, maxWalkSpd);
+    }
+    else
+    {
+        // Apply deceleration when not moving
+        var deceleration = 3; // Deceleration rate
+        
+        if (hspd != 0)
+        {
+            var directionS = sign(hspd);
+            
+            hspd -= directionS * deceleration;
+            
+            // Change direction if speed becomes too small
+            if (directionS != sign(hspd))
+                hspd = 0;
+        }
     }
 
 	vspd = vspd + baseGrav;
@@ -55,6 +74,7 @@ StateFree = function()
 		{
 			canjump = 5;
 			canDash = true;
+			acceleration = 0.3;
 		}
 		while(abs((vspd) > 0.1))
 		{
@@ -71,6 +91,7 @@ StateFree = function()
 		vspd = vspdJump;
 		canjump= 0;
 		canDash = true;
+		acceleration = 4;
 	}
 	
 	if((vspd < 0) && (!key_jump_held)) vspd += (baseGrav*2);
@@ -90,6 +111,7 @@ StateDash = function()
         image_alpha = 0.7;
     }
 	
+	/*
 	// Permit jumping during the dash
     if (key_jump)
     {
@@ -98,6 +120,7 @@ StateDash = function()
         canDash = true;
         state = StateFree; // Switch back to free state for jumping
     }
+	*/
     
     //horizontal collision
     if (place_meeting(x+hspd,y,o_wall)) 
