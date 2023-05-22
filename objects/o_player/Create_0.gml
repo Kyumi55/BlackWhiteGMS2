@@ -89,13 +89,13 @@ StateFree = function()
 	//jump
 	if(canjump-- > 0) && (key_jump) && (jumpCounter <= 0)
 	{
-		jumpCounter++;
+		jumpCounter++; //makes it so that you can't keep jumping when the button is held
 		vspd = vspdJump;
 		canjump= 0;
 		canDash = true;
 		acceleration = 4;
 	}
-	if(key_jump_release) jumpCounter = 0;
+	if(key_jump_release) jumpCounter = 0; //if jump button is released, you can jump buffer again
 	
 	if((vspd < 0) && (!key_jump_held)) vspd += (baseGrav*2);
 }
@@ -114,7 +114,7 @@ StateDash = function()
         image_alpha = 0.7;
     }
 	
-	/*
+	
 	// Permit jumping during the dash
     if (key_jump)
     {
@@ -123,7 +123,7 @@ StateDash = function()
         canDash = true;
         state = StateFree; // Switch back to free state for jumping
     }
-	*/
+	
     
     //horizontal collision
     if (place_meeting(x+hspd,y,o_wall)) 

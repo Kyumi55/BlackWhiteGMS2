@@ -18,7 +18,11 @@
   ],
   "ResourceOrderSettings": [
     {"name":"o_wall","order":1,"path":"objects/o_wall/o_wall.yy",},
+    {"name":"s_enemy1","order":2,"path":"sprites/s_enemy1/s_enemy1.yy",},
     {"name":"o_trail","order":2,"path":"objects/o_trail/o_trail.yy",},
     {"name":"s_wall","order":1,"path":"sprites/s_wall/s_wall.yy",},
+    {"name":"Goal","order":4,"path":"objects/Goal/Goal.yy",},
+    {"name":"o_enemy1","order":3,"path":"objects/o_enemy1/o_enemy1.yy",},
+    {"name":"GoalScreen","order":1,"path":"rooms/GoalScreen/GoalScreen.yy",},
   ],
 }
