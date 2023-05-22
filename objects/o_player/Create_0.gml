@@ -16,6 +16,13 @@ StateFree = function()
 	var move = key_right-key_left;
 
 	hspd = move * walkSpd;
+	
+	var speedModifier = 1;
+
+    if (!key_dash) // Only adjust horizontal speed if not dashing
+    {
+        hspd = move * walkSpd * speedModifier;
+    }
 
 	vspd = vspd + baseGrav;
 	
@@ -81,6 +88,15 @@ StateDash = function()
         sprite_index = other.sprite_index;
         image_blend = c_ltgray; //select the color
         image_alpha = 0.7;
+    }
+	
+	// Permit jumping during the dash
+    if (key_jump)
+    {
+        vspd = vspdJump; // Apply jump vertical speed
+        canjump= 0;
+        canDash = true;
+        state = StateFree; // Switch back to free state for jumping
     }
     
     //horizontal collision
