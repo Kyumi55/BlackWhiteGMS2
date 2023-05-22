@@ -9,6 +9,7 @@ vspdJump = -10;
 canDash = false;
 dashDistance = 150;
 dashTime = 8;
+jumpCounter = 0;
 
 
 StateFree = function()
@@ -16,7 +17,7 @@ StateFree = function()
 	var move = key_right - key_left;
     
     var maxWalkSpd = 6; // Maximum walking speed
-    var acceleration = 0.3; // Acceleration rate
+    var acceleration = 0.8; // Acceleration rate
     
     // Apply acceleration to horizontal speed
     if (move != 0)
@@ -29,7 +30,7 @@ StateFree = function()
     else
     {
         // Apply deceleration when not moving
-        var deceleration = 3; // Deceleration rate
+        var deceleration = 5; // Deceleration rate
         
         if (hspd != 0)
         {
@@ -86,13 +87,15 @@ StateFree = function()
 	y = y + vspd; 
 
 	//jump
-	if(canjump-- > 0) && (key_jump)
+	if(canjump-- > 0) && (key_jump) && (jumpCounter <= 0)
 	{
+		jumpCounter++;
 		vspd = vspdJump;
 		canjump= 0;
 		canDash = true;
 		acceleration = 4;
 	}
+	if(key_jump_release) jumpCounter = 0;
 	
 	if((vspd < 0) && (!key_jump_held)) vspd += (baseGrav*2);
 }
