@@ -7,9 +7,13 @@ baseGrav = 0.3;
 canjump = 0; //bool
 vspdJump = -10;
 canDash = false;
-dashDistance = 150;
+dashDistance = 125;
 dashTime = 8;
 jumpCounter = 0;
+
+global.timerHoldMins = 0;
+global.timerHoldSecs = 0;
+timerTemp = 0;
 
 
 StateFree = function()
@@ -18,6 +22,8 @@ StateFree = function()
     
     var maxWalkSpd = 6; // Maximum walking speed
     var acceleration = 0.8; // Acceleration rate
+	
+	timerTemp  += delta_time;
     
     // Apply acceleration to horizontal speed
     if (move != 0)
@@ -46,7 +52,8 @@ StateFree = function()
 
 	vspd = vspd + baseGrav;
 	
-	if(canDash && !place_meeting(x, y+1, o_wall) && key_dash)
+	//if(canDash && !place_meeting(x, y+1, o_wall) && key_dash) //Alt if you don't want to dash on ground
+	if(canDash && key_dash)
     {
 		canDash = false;
 		canjump = 0;
@@ -114,7 +121,7 @@ StateDash = function()
         image_alpha = 0.7;
     }
 	
-	
+	/*
 	// Permit jumping during the dash
     if (key_jump)
     {
@@ -123,7 +130,7 @@ StateDash = function()
         canDash = true;
         state = StateFree; // Switch back to free state for jumping
     }
-	
+	*/
     
     //horizontal collision
     if (place_meeting(x+hspd,y,o_wall)) 
@@ -172,8 +179,9 @@ StateDash = function()
     dashEnergy -= dashSp;
     if(dashEnergy <= 0)
     {
-        vspd = 0;
-        hspd = 0;
+        vspd ++;
+		if(vspd > 0) vspd = 0;
+        //hspd = 0;
         state = StateFree;
     }
 }
