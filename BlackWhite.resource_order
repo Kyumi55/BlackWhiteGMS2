@@ -27,5 +27,7 @@
     {"name":"o_enemy1","order":3,"path":"objects/o_enemy1/o_enemy1.yy",},
     {"name":"GoalScreen","order":1,"path":"rooms/GoalScreen/GoalScreen.yy",},
     {"name":"Sprite4","order":3,"path":"sprites/Sprite4/Sprite4.yy",},
+    {"name":"s_player_hitbox","order":4,"path":"sprites/s_player_hitbox/s_player_hitbox.yy",},
+    {"name":"o_player_hitbox","order":7,"path":"objects/o_player_hitbox/o_player_hitbox.yy",},
   ],
 }

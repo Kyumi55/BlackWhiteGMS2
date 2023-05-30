@@ -1,3 +1,3 @@
 /// @description Insert description here
 // You can write your code in this editor
-global.numEnemies = 0;
+var hitbox_instance;

@@ -1,9 +1,8 @@
 {
   "resourceType": "GMObject",
   "resourceVersion": "1.0",
-  "name": "o_enemy1",
+  "name": "o_player_hitbox",
   "eventList": [
-    {"resourceType":"GMEvent","resourceVersion":"1.0","name":"","collisionObjectId":null,"eventNum":0,"eventType":3,"isDnD":false,},
     {"resourceType":"GMEvent","resourceVersion":"1.0","name":"","collisionObjectId":null,"eventNum":0,"eventType":0,"isDnD":false,},
   ],
   "managed": true,
@@ -29,8 +28,8 @@
   "properties": [],
   "solid": false,
   "spriteId": {
-    "name": "s_enemy1",
-    "path": "sprites/s_enemy1/s_enemy1.yy",
+    "name": "s_player_hitbox",
+    "path": "sprites/s_player_hitbox/s_player_hitbox.yy",
   },
   "spriteMaskId": null,
   "visible": true,

@@ -47,6 +47,8 @@
     {"id":{"name":"o_enemy1","path":"objects/o_enemy1/o_enemy1.yy",},},
     {"id":{"name":"GoalScreen","path":"rooms/GoalScreen/GoalScreen.yy",},},
     {"id":{"name":"Sprite4","path":"sprites/Sprite4/Sprite4.yy",},},
+    {"id":{"name":"s_player_hitbox","path":"sprites/s_player_hitbox/s_player_hitbox.yy",},},
+    {"id":{"name":"o_player_hitbox","path":"objects/o_player_hitbox/o_player_hitbox.yy",},},
     {"id":{"name":"Room1","path":"rooms/Room1/Room1.yy",},},
   ],
   "RoomOrderNodes": [

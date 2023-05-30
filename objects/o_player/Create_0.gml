@@ -5,9 +5,9 @@ vspd = 0;
 baseGrav = 0.3;
 //walkSpd = 4;
 canjump = 0; //bool
-vspdJump = -10;
+vspdJump = -7;
 canDash = false;
-dashDistance = 125;
+dashDistance = 90;
 dashTime = 8;
 jumpCounter = 0;
 
@@ -15,12 +15,14 @@ global.timerHoldMins = 0;
 global.timerHoldSecs = 0;
 timerTemp = 0;
 
+dashChecker = 0;
+UpChecker = false;
 
 StateFree = function()
 {
 	var move = key_right - key_left;
     
-    var maxWalkSpd = 6; // Maximum walking speed
+    var maxWalkSpd = 4; // Maximum walking speed
     var acceleration = 0.8; // Acceleration rate
 	
 	timerTemp  += delta_time;
@@ -55,6 +57,10 @@ StateFree = function()
 	//if(canDash && !place_meeting(x, y+1, o_wall) && key_dash) //Alt if you don't want to dash on ground
 	if(canDash && key_dash)
     {
+		if(key_jump && key_up && !key_left && !key_right && move == 0) UpChecker = true; //check up they are dashing upward
+		if(key_up && !key_left && !key_right && move == 0) UpChecker = true;
+		
+		dashChecker++;
 		canDash = false;
 		canjump = 0;
 		dashDirection = point_direction(0,0,key_right-key_left,key_down-key_up);
@@ -80,6 +86,7 @@ StateFree = function()
 	{
 		if(vspd > 0 ) 
 		{
+			dashChecker = 0;
 			canjump = 5;
 			canDash = true;
 			acceleration = 0.3;
@@ -96,6 +103,8 @@ StateFree = function()
 	//jump
 	if(canjump-- > 0) && (key_jump) && (jumpCounter <= 0)
 	{
+		
+		
 		jumpCounter++; //makes it so that you can't keep jumping when the button is held
 		vspd = vspdJump;
 		canjump= 0;
@@ -104,7 +113,10 @@ StateFree = function()
 	}
 	if(key_jump_release) jumpCounter = 0; //if jump button is released, you can jump buffer again
 	
-	if((vspd < 0) && (!key_jump_held)) vspd += (baseGrav*2);
+	if((vspd < 0) && (!key_jump_held) && (dashChecker <= 0)) 
+	{
+		vspd += (baseGrav*2);
+	}
 }
 
 StateDash = function()
@@ -120,6 +132,7 @@ StateDash = function()
         image_blend = c_ltgray; //select the color
         image_alpha = 0.7;
     }
+	
 	
 	/*
 	// Permit jumping during the dash
@@ -165,10 +178,12 @@ StateDash = function()
             {
                 y += signV;
             }
+			
             vspd = 0;
             canjump = 5;
             canDash = true; // The player can dash again as they are on the floor
         }
+		UpChecker = false;
     }
     else
     {
@@ -179,10 +194,21 @@ StateDash = function()
     dashEnergy -= dashSp;
     if(dashEnergy <= 0)
     {
-        vspd ++;
-		if(vspd > 0) vspd = 0;
-        //hspd = 0;
-        state = StateFree;
+		if(UpChecker == true) 
+		{
+			vspd = vspd + 8;
+			if(vspd > 0) vspd = 0;
+	        //hspd = hspd * 1.2;
+	        state = StateFree;
+		}
+		else
+		{
+	        vspd = vspd + 4;
+			if(vspd > 0) vspd = 0;
+	        //hspd = hspd * 1.2;
+	        state = StateFree;
+		}
+		UpChecker = false;
     }
 }
 
