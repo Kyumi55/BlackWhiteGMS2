@@ -9,6 +9,7 @@ vspdJump = -7;
 canDash = false;
 dashDistance = 90;
 dashTime = 8;
+dashGroundDistance = 400;
 jumpCounter = 0;
 
 global.timerHoldMins = 0;
@@ -16,7 +17,9 @@ global.timerHoldSecs = 0;
 timerTemp = 0;
 
 dashChecker = 0;
+dashAirCounter = 0;
 UpChecker = false;
+fastFalling = false;
 
 StateFree = function()
 {
@@ -97,6 +100,7 @@ StateFree = function()
 			if(!place_meeting(x,y + vspd,o_wall)) y +=vspd;
 		}
 		vspd = 0;
+		dashAirCounter = 0;
 	}
 	y = y + vspd; 
 
@@ -117,6 +121,26 @@ StateFree = function()
 	{
 		vspd += (baseGrav*2);
 	}
+	
+	// fast fall
+    if (key_dash && key_down && !key_left && !key_right && !key_up && dashAirCounter >= 1)
+    {
+		 //Trail Effect
+	    with(instance_create_depth(x,y,depth+1,o_trail))
+	    {
+	        sprite_index = other.sprite_index;
+	        image_blend = c_white; //select the color
+	        image_alpha = 0.7;
+	    }
+		fastFalling = true;
+        canjump= 0;
+        //canDash = true;
+		dashSp = dashGroundDistance/dashTime;
+		dashEnergy = dashGroundDistance;
+		dashDirection = point_direction(0,0,0,key_down);
+		vspd = lengthdir_y(dashSp,dashDirection);
+        //state = StateFree; // Switch back to free state for jumping
+    }
 }
 
 StateDash = function()
@@ -134,16 +158,26 @@ StateDash = function()
     }
 	
 	
-	/*
-	// Permit jumping during the dash
-    if (key_jump)
+	
+	// fast fall(strict timing)
+    if (key_dash && key_down && !key_left && !key_right && !key_up)
     {
-        vspd = vspdJump; // Apply jump vertical speed
+		with(instance_create_depth(x,y,depth+1,o_trail))
+	    {
+	        sprite_index = other.sprite_index;
+	        image_blend = c_blue; //select the color
+	        image_alpha = 0.7;
+	    }
+		//fastFalling = true;
+		vspd = lengthdir_y(dashSp,dashDirection);
         canjump= 0;
-        canDash = true;
-        state = StateFree; // Switch back to free state for jumping
+        //canDash = true;
+		dashDirection = point_direction(0,0,0,key_down);
+		dashSp = dashGroundDistance/dashTime;
+		dashEnergy = dashGroundDistance;
+        //state = StateFree; // Switch back to free state for jumping
     }
-	*/
+	
     
     //horizontal collision
     if (place_meeting(x+hspd,y,o_wall)) 
@@ -204,11 +238,13 @@ StateDash = function()
 		else
 		{
 	        vspd = vspd + 4;
-			if(vspd > 0) vspd = 0;
+			if(vspd > 0 && fastFalling == false) vspd = 0;
 	        //hspd = hspd * 1.2;
+			fastFalling = false;
 	        state = StateFree;
 		}
 		UpChecker = false;
+		dashAirCounter++;
     }
 }
 
