@@ -125,6 +125,7 @@ StateFree = function()
 	// fast fall
     if (key_dash && key_down && !key_left && !key_right && !key_up && dashAirCounter >= 1)
     {
+		dashGroundDistance = 400;
 		 //Trail Effect
 	    with(instance_create_depth(x,y,depth+1,o_trail))
 	    {
@@ -141,6 +142,10 @@ StateFree = function()
 		vspd = lengthdir_y(dashSp,dashDirection);
         //state = StateFree; // Switch back to free state for jumping
     }
+	else
+	{
+		dashGroundDistance = 0;
+	}
 }
 
 StateDash = function()
@@ -162,6 +167,7 @@ StateDash = function()
 	// fast fall(strict timing)
     if (key_dash && key_down && !key_left && !key_right && !key_up)
     {
+		dashGroundDistance = 400;
 		with(instance_create_depth(x,y,depth+1,o_trail))
 	    {
 	        sprite_index = other.sprite_index;
@@ -177,6 +183,10 @@ StateDash = function()
 		dashEnergy = dashGroundDistance;
         //state = StateFree; // Switch back to free state for jumping
     }
+	else
+	{
+		dashGroundDistance = 0;
+	}
 	
     
     //horizontal collision
@@ -223,6 +233,8 @@ StateDash = function()
     {
         y = y + vspd; 
     }
+	
+	if(key_jump_release) jumpCounter = 0;
     
     //Ending dash
     dashEnergy -= dashSp;
