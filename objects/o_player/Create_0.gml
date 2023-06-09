@@ -3,14 +3,16 @@
 hspd = 0;
 vspd = 0;
 baseGrav = 0.3;
+baseGravMulti = 2.0;
 //walkSpd = 4;
 canjump = 0; //bool
-vspdJump = -7;
+vspdJump = -11;
 canDash = false;
 dashDistance = 90;
 dashTime = 8;
 dashGroundDistance = 400;
 jumpCounter = 0;
+numJumps = 1;
 
 global.timerHoldMins = 0;
 global.timerHoldSecs = 0;
@@ -20,6 +22,7 @@ dashChecker = 0;
 dashAirCounter = 0;
 UpChecker = false;
 fastFalling = false;
+inAir = false;
 
 StateFree = function()
 {
@@ -55,7 +58,7 @@ StateFree = function()
         }
     }
 
-	vspd = vspd + baseGrav;
+	vspd = vspd + baseGrav * baseGravMulti;
 	
 	//if(canDash && !place_meeting(x, y+1, o_wall) && key_dash) //Alt if you don't want to dash on ground
 	if(canDash && key_dash)
@@ -101,14 +104,15 @@ StateFree = function()
 		}
 		vspd = 0;
 		dashAirCounter = 0;
+		numJumps = 1;
 	}
 	y = y + vspd; 
 
 	//jump
-	if(canjump-- > 0) && (key_jump) && (jumpCounter <= 0)
+	if(canjump-- > 0) && (key_jump) && (jumpCounter <= 0 && numJumps > 0)
 	{
-		
-		
+		//inAir = true;
+		numJumps--;
 		jumpCounter++; //makes it so that you can't keep jumping when the button is held
 		vspd = vspdJump;
 		canjump= 0;

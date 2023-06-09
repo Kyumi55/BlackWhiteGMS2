@@ -17,8 +17,10 @@
     {"name":"Timelines","order":8,"path":"folders/Timelines.yy",},
   ],
   "ResourceOrderSettings": [
+    {"name":"o_stageClearLogo","order":8,"path":"objects/o_stageClearLogo/o_stageClearLogo.yy",},
     {"name":"o_wall","order":1,"path":"objects/o_wall/o_wall.yy",},
     {"name":"o_Results","order":6,"path":"objects/o_Results/o_Results.yy",},
+    {"name":"s_StageClearLogo","order":5,"path":"sprites/s_StageClearLogo/s_StageClearLogo.yy",},
     {"name":"s_enemy1","order":2,"path":"sprites/s_enemy1/s_enemy1.yy",},
     {"name":"o_trail","order":2,"path":"objects/o_trail/o_trail.yy",},
     {"name":"ScoreKeeper","order":5,"path":"objects/ScoreKeeper/ScoreKeeper.yy",},

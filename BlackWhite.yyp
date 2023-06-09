@@ -35,10 +35,12 @@
   },
   "resources": [
     {"id":{"name":"Script1","path":"scripts/Script1/Script1.yy",},},
+    {"id":{"name":"o_stageClearLogo","path":"objects/o_stageClearLogo/o_stageClearLogo.yy",},},
     {"id":{"name":"o_wall","path":"objects/o_wall/o_wall.yy",},},
     {"id":{"name":"s_player","path":"sprites/s_player/s_player.yy",},},
     {"id":{"name":"o_player","path":"objects/o_player/o_player.yy",},},
     {"id":{"name":"o_Results","path":"objects/o_Results/o_Results.yy",},},
+    {"id":{"name":"s_StageClearLogo","path":"sprites/s_StageClearLogo/s_StageClearLogo.yy",},},
     {"id":{"name":"s_enemy1","path":"sprites/s_enemy1/s_enemy1.yy",},},
     {"id":{"name":"o_trail","path":"objects/o_trail/o_trail.yy",},},
     {"id":{"name":"ScoreKeeper","path":"objects/ScoreKeeper/ScoreKeeper.yy",},},
