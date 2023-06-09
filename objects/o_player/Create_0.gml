@@ -13,6 +13,7 @@ dashTime = 8;
 dashGroundDistance = 400;
 jumpCounter = 0;
 numJumps = 1;
+numDashes = 0;
 
 global.timerHoldMins = 0;
 global.timerHoldSecs = 0;
@@ -23,6 +24,7 @@ dashAirCounter = 0;
 UpChecker = false;
 fastFalling = false;
 inAir = false;
+onGround = false;
 
 StateFree = function()
 {
@@ -61,11 +63,22 @@ StateFree = function()
 	vspd = vspd + baseGrav * baseGravMulti;
 	
 	//if(canDash && !place_meeting(x, y+1, o_wall) && key_dash) //Alt if you don't want to dash on ground
-	if(canDash && key_dash)
+	if(canDash && key_dash && numDashes <= 1)
     {
-		if(key_jump && key_up && !key_left && !key_right && move == 0) UpChecker = true; //check up they are dashing upward
-		if(key_up && !key_left && !key_right && move == 0) UpChecker = true;
+		if(key_jump && key_up && !key_left && !key_right && move == 0) 
+		{
+			numDashes++;
+			UpChecker = true; //check up they are dashing upward
+			onGround = false
+		}
+		if(key_up && !key_left && !key_right && move == 0) 
+		{
+			numDashes++;
+			UpChecker = true;
+			onGround = false
+		}
 		
+		numDashes++;
 		dashChecker++;
 		canDash = false;
 		canjump = 0;
@@ -92,6 +105,8 @@ StateFree = function()
 	{
 		if(vspd > 0 ) 
 		{
+			onGround = true;
+			numDashes = 0;
 			dashChecker = 0;
 			canjump = 5;
 			canDash = true;
@@ -106,19 +121,30 @@ StateFree = function()
 		dashAirCounter = 0;
 		numJumps = 1;
 	}
+	else onGround = false; // Update onGround variable to false
 	y = y + vspd; 
+	
+	
 
 	//jump
-	if(canjump-- > 0) && (key_jump) && (jumpCounter <= 0 && numJumps > 0)
+	if(canjump-- > 0) && (key_jump) && (jumpCounter <= 0 && numJumps > 0 && numDashes <= 0)
 	{
 		//inAir = true;
-		numJumps--;
 		jumpCounter++; //makes it so that you can't keep jumping when the button is held
 		vspd = vspdJump;
-		canjump= 0;
 		canDash = true;
 		acceleration = 4;
+		canjump = 0;
+		numJumps--;
 	}
+	if(numDashes <= 0 && (key_jump)) 
+	{
+		numDashes++
+		jumpCounter++; //makes it so that you can't keep jumping when the button is held
+		vspd = vspdJump;
+		acceleration = 4;			
+	}
+	
 	if(key_jump_release) jumpCounter = 0; //if jump button is released, you can jump buffer again
 	
 	if((vspd < 0) && (!key_jump_held) && (dashChecker <= 0)) 
@@ -150,6 +176,16 @@ StateFree = function()
 	{
 		dashGroundDistance = 0;
 	}
+	
+	var dashAirBool = false;
+	if(onGround == true) inAir = false;
+	else 
+	{
+		if(canjump <=0)	dashAirBool = true;
+		inAir = true;
+	}
+	
+	//show_debug_message(numDashes);
 }
 
 StateDash = function()
@@ -157,6 +193,11 @@ StateDash = function()
     //move via the dash
     hspd = lengthdir_x(dashSp,dashDirection);
     vspd = lengthdir_y(dashSp,dashDirection);
+	
+	if(UpChecker == true)
+	{
+		onGround = false
+	}
     
     //Trail Effect
     with(instance_create_depth(x,y,depth+1,o_trail))
