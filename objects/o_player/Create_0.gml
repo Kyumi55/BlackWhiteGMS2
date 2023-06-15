@@ -6,7 +6,7 @@ baseGrav = 0.3;
 baseGravMulti = 2.0;
 //walkSpd = 4;
 canjump = 0; //bool
-vspdJump = -11;
+vspdJump = -10;
 canDash = false;
 dashDistance = 90;
 dashTime = 8;
@@ -153,7 +153,7 @@ StateFree = function()
 		numJumps--;
 	}
 	
-	if(numDashes <= 0 && (key_jump) && onGround == false) 
+	if(numDashes <= 0 && (key_jump) && onGround == false && jumpCounter <= 0) 
 	{
 		numDashes++
 		jumpCounter++; //makes it so that you can't keep jumping when the button is held
@@ -226,7 +226,7 @@ StateFree = function()
 		inAir = true;
 	}
 	
-	show_debug_message(vspd);
+	show_debug_message(jumpCounter);
 }
 
 StateDash = function()

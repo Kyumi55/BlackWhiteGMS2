@@ -20,4 +20,8 @@ global.timeString = string(global.timerHoldMins) + ":" + secondsString;
 
 //timerHold = 0;
 
-room_goto(GoalScreen); // Move player to the next room
+var target = GoalScreen;
+
+TransitionStart(target, sqFadeOut, sqScrollOut); //TransitionStart(Pick room you want to go to, Pick your Fade Out, then Fade In)
+
+//room_goto(GoalScreen); // Move player to the next room
